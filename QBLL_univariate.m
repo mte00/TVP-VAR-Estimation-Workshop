@@ -19,10 +19,11 @@ s2=e'*e/(T-k); % diagonal elements of this are the scale parameter of Gamma dist
 % let's call them gamma0;
 
 gamma0=1./diag(s2);
+%gamma0=10*ones(N,1);
 % now we need to define the kapp0 matrices for each of the N assets.
 kappa0=zeros(k+1,k+1,N);
 for kk=1:N
-kappa0(:,:,kk)=s2(kk,kk)*inv(X'*X);
+kappa0(:,:,kk)=(1/s2(kk,kk))*inv(X'*X);
 end
 a0=max(k+2,k+2*8-T);
 gamma0=(a0-k-1)*gamma0;
@@ -33,7 +34,8 @@ weights=normker(T,sqrt(T));
 
 betas=zeros(1+k,N,3,T);
 vols=zeros(T,N,3);
-qq=[0.025 0.5 0.975];
+%qq=[0.025 0.5 0.975];
+qq=[0.16 0.5 0.84];
 
 parfor kk=1:N
     kk
@@ -53,9 +55,9 @@ parfor kk=1:N
        BB=bayessv*((X'*diag(w))*yy+k0*b01);
        bayesalpha=a0+sum(w)/2;
        g1=b01'*k0*b01; g2=yy'*diag(w)*yy; g3=BB'*bayesprec*BB;
-       bayesgamma=g0+0.5*(g1+g2-g3)^3;
+       bayesgamma=g0+0.5*(g1+g2-g3);
        for ll=1:nsim
-           gam=1/gamrnd(bayesalpha,bayesgamma);
+           gam=gamrnd(bayesalpha,1/bayesgamma);
            V1(1,ll)=gam;
            nu=randn(k+1,1);
            B=(BB+chol(bayessv)'*nu*sqrt(gam))';
@@ -68,8 +70,5 @@ parfor kk=1:N
    betas(:,kk,:,:)=quantile(BET,qq,2);
    vols(:,kk,:)=quantile(VOL,qq,2);
 end 
-
-
-
 
 end
