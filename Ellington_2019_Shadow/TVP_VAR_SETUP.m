@@ -28,7 +28,7 @@ G1=1; % 1=Standard TVP VAR as in Primiceri (2005).
       % 0=add extra layer of stochastic volatility to parameters.
 if G1==1
     if SHADOW==0
-        DFILE1 = 'D:\Dropbox\Hejnice_2020_Workshop\MATLAB\Ellington_2019_Shadow\Results\Reduced\US_Burn';
+        DFILE1 = '<ENTER YOUR PATH HERE>\Results\Reduced\US_Burn';
         DFILE2 = '<ENTER YOUR PATH HERE>\Results\Reduced\US_MCMC';
         y=data(:,1:3);
     elseif SHADOW == 1
